@@ -1,9 +1,10 @@
 import { FC, useState } from 'react';
 import { ArrowLeft, Edit, MoreVertical } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Lead } from '../../types/Lead';
 import { Tabs } from './Tabs';
-import { DetailField } from './DetailField';
+import { DetailField} from './DetailField';
+import RelatedTab from './RelatedTab';
 
 const sampleLeadDetails: Lead = {
   id: '6',
@@ -30,9 +31,59 @@ const sampleLeadDetails: Lead = {
 };
 
 const LeadDetailPage: FC = () => {
-  const [activeTab, setActiveTab] = useState('DETAILS');
+  const [activeTab, setActiveTab] = useState('RELATED');
   const navigate = useNavigate();
-  const { id } = useParams();
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'RELATED':
+        return (
+          <RelatedTab
+            leadName={sampleLeadDetails.name}
+            leadEmail={sampleLeadDetails.email}
+            leadPhone={sampleLeadDetails.phone || ''}
+            leadAvatar={sampleLeadDetails.avatar}
+            leadOwnerName={sampleLeadDetails.leadOwner || ''}
+            leadOwnerRole="Owner"
+            leadOwnerAvatar="https://api.dicebear.com/7.x/avataaars/svg?seed=owner"
+          />
+        );
+      case 'DETAILS':
+        return (
+          <div className="p-4">
+            <h2 className="text-xl font-semibold mb-4">Lead Information</h2>
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <DetailField label="Lead Owner" value={sampleLeadDetails.leadOwner || ''} />
+              <DetailField label="Company" value={sampleLeadDetails.company || ''} />
+              <DetailField label="Lead Name" value={sampleLeadDetails.name} />
+              <DetailField label="Title" value={sampleLeadDetails.title || ''} />
+              <DetailField label="Email" value={sampleLeadDetails.email} isLink />
+              <DetailField label="Phone" value={sampleLeadDetails.phone || ''} isLink />
+              <DetailField label="Mobile" value={sampleLeadDetails.mobile || ''} isLink />
+              <DetailField label="Website" value={sampleLeadDetails.website || ''} isLink />
+              <DetailField label="Lead Source" value={sampleLeadDetails.leadSource || ''} />
+              <DetailField label="Lead Status" value={sampleLeadDetails.leadStatus || ''} />
+              <DetailField label="Industry" value={sampleLeadDetails.industry || ''} />
+              <DetailField label="Annual Revenue" value={sampleLeadDetails.annualRevenue || ''} />
+              <DetailField label="Created By" value={sampleLeadDetails.createdBy || ''} />
+              <DetailField label="Skype ID" value={sampleLeadDetails.skypeId || ''} isLink />
+              <DetailField label="Modified By" value={sampleLeadDetails.modifiedBy || ''} />
+              <DetailField label="Created Time" value={sampleLeadDetails.createdTime || ''} />
+              <DetailField label="Modified Time" value={sampleLeadDetails.modifiedTime || ''} />
+              <DetailField label="Twitter" value={sampleLeadDetails.twitter || ''} isLink />
+              <DetailField label="Last Activity Time" value={sampleLeadDetails.lastActivityTime || ''} />
+            </div>
+
+            <h2 className="text-xl font-semibold my-4">Address Information</h2>
+            <div className="bg-white rounded-lg p-4 shadow-sm mb-20">
+              {/* Address fields would go here */}
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -50,38 +101,7 @@ const LeadDetailPage: FC = () => {
       </header>
 
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
-
-      {activeTab === 'DETAILS' && (
-        <div className="p-4">
-          <h2 className="text-xl font-semibold mb-4">Lead Information</h2>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <DetailField label="Lead Owner" value={sampleLeadDetails.leadOwner || ''} />
-            <DetailField label="Company" value={sampleLeadDetails.company || ''} />
-            <DetailField label="Lead Name" value={sampleLeadDetails.name} />
-            <DetailField label="Title" value={sampleLeadDetails.title || ''} />
-            <DetailField label="Email" value={sampleLeadDetails.email} isLink />
-            <DetailField label="Phone" value={sampleLeadDetails.phone || ''} isLink />
-            <DetailField label="Mobile" value={sampleLeadDetails.mobile || ''} isLink />
-            <DetailField label="Website" value={sampleLeadDetails.website || ''} isLink />
-            <DetailField label="Lead Source" value={sampleLeadDetails.leadSource || ''} />
-            <DetailField label="Lead Status" value={sampleLeadDetails.leadStatus || ''} />
-            <DetailField label="Industry" value={sampleLeadDetails.industry || ''} />
-            <DetailField label="Annual Revenue" value={sampleLeadDetails.annualRevenue || ''} />
-            <DetailField label="Created By" value={sampleLeadDetails.createdBy || ''} />
-            <DetailField label="Skype ID" value={sampleLeadDetails.skypeId || ''} isLink />
-            <DetailField label="Modified By" value={sampleLeadDetails.modifiedBy || ''} />
-            <DetailField label="Created Time" value={sampleLeadDetails.createdTime || ''} />
-            <DetailField label="Modified Time" value={sampleLeadDetails.modifiedTime || ''} />
-            <DetailField label="Twitter" value={sampleLeadDetails.twitter || ''} isLink />
-            <DetailField label="Last Activity Time" value={sampleLeadDetails.lastActivityTime || ''} />
-          </div>
-
-          <h2 className="text-xl font-semibold my-4">Address Information</h2>
-          <div className="bg-white rounded-lg p-4 shadow-sm mb-20">
-            {/* Address fields would go here */}
-          </div>
-        </div>
-      )}
+      {renderTabContent()}
     </div>
   );
 };
